@@ -53,7 +53,6 @@ const main = () => {
                     return movie.poster_path;
                 }
             }
-
             listMovieElement.innerHTML += `
             <div class="col">
                 <div class="card">

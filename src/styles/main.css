@@ -8,13 +8,16 @@ body {
     font-family: sans-serif;
 }
 
-main {
-
-}
 
 .hero{
     width: 100%;
     padding: 80px;
     background-color: #d6c6ff;
+}
+
+@media screen and (max-width: 620px){
+    .hero{
+        padding: 20px 10px;
+    }
 }
 
