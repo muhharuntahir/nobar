@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "deploy": "gh-pages -d dist",
     "dev": "webpack --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "serve": "webpack serve --config webpack.dev.js"
@@ -11,9 +12,11 @@
   "keywords": [],
   "author": "muhammad_harun <muhharuntahir@gmail.com>",
   "license": "ISC",
+  "homepage": "https://muhharuntahir.github.io/nobar",
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.2",
+    "gh-pages": "^4.0.0",
     "regenerator-runtime": "^0.13.10",
     "vanilla-tilt": "^1.7.3"
   },
