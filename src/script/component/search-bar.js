@@ -37,6 +37,7 @@ class SearchBar extends HTMLElement{
             border: 0;
             font-weight: bold;
             color: #6C4AB6;
+            font-size: 16px;
         }
         
         .search-container > input:focus {

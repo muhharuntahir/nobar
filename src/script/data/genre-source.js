@@ -1,6 +1,6 @@
-class DataSource {
-    static searchMovie(keyword) {
-        return fetch(`https://api.themoviedb.org/3/search/movie?api_key=eea3690386dd414a66b113e3f553a453&language=en-US&query=${keyword}`)
+class GenreSource {
+    static searchByGenre(id) {
+        return fetch(`https://api.themoviedb.org/3/discover/movie?api_key=eea3690386dd414a66b113e3f553a453&language=en-US&with_genres=${id}`)
             .then(response => {
                 return response.json();
             })
@@ -8,11 +8,11 @@ class DataSource {
                 if (responseJson.results) {
                     return Promise.resolve(responseJson.results);
                 } else {
-                    return Promise.reject(`${keyword} is not found`);
+                    return Promise.reject(`${id} is not found`);
                 }
             });
     }
 }
 
-export default DataSource;
+export default GenreSource;
 

@@ -1,13 +1,18 @@
 import '../component/search-bar.js';
 import DataSource from '../data/data-source.js';
+import GenreSource from "../data/genre-source";
 
 const main = () => {
+    const baseUrl = 'https://api.themoviedb.org/3';
+    const apiKey = '?api_key=eea3690386dd414a66b113e3f553a453';
+    const linkImage = 'https://image.tmdb.org/t/p/w500';
 
     const searchElement = document.querySelector('search-bar');
 
+
     const onButtonSearchClicked = async () => {
         try {
-            const result = await DataSource.searchClub(searchElement.value);
+            const result = await DataSource.searchMovie(searchElement.value);
             renderAllMovies(result);
         } catch (message) {
             showResponseMessage(message);
@@ -16,13 +21,53 @@ const main = () => {
 
     searchElement.clickEvent = onButtonSearchClicked;
 
+    const getGenres = () => {
+        fetch(`${baseUrl}/genre/movie/list${apiKey}`)
+            .then(response => {
+                return response.json();
+            })
+            .then(responseJson => {
+                if (responseJson.genres == undefined) {
+                    showResponseMessage(responseJson = "Data tidak ditemukan");
+                } else {
+                    renderAllGenres(responseJson.genres);
+                }
+            })
+            .catch(error => {
+                showResponseMessage(error);
+            });
+    }
 
-    const baseUrl = 'https://api.themoviedb.org/3';
-    const apiKey = 'eea3690386dd414a66b113e3f553a453';
-    const linkImage = 'https://image.tmdb.org/t/p/w500';
+    const renderAllGenres = (genres) => {
+        const listGenreElement = document.querySelector('#listGenres');
+        listGenreElement.innerHTML = '';
 
-    const getNowPlaying = () => {
-        fetch(`${baseUrl}/movie/now_playing?api_key=${apiKey}&language=en-US&page=1`)
+        genres.forEach(genre => {
+            listGenreElement.innerHTML += `
+            <button id="${genre.id} "type="button" class="btn btn-purple mt-2 button-genre" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top">
+            ${genre.name}
+            </button>            
+          `;
+        });
+
+        const buttons = document.querySelectorAll('.button-genre');
+        buttons.forEach(button => {
+            button.addEventListener('click', async (event) => {
+                const genreId = event.target.id;
+                try {
+                    const result = await GenreSource.searchByGenre(genreId);
+                    renderAllMovies(result);
+                } catch (message) {
+                    showResponseMessage(message);
+                }
+            });
+        });
+
+
+    };
+
+    const getMovie = () => {
+        fetch(`${baseUrl}/discover/movie${apiKey}`)
             .then(response => {
                 return response.json();
             })
@@ -43,17 +88,18 @@ const main = () => {
         const listMovieElement = document.querySelector('#listMovie');
         listMovieElement.innerHTML = '';
 
-
-
-        movies.forEach(movie => {
-            const movieImage = () => {
-                if(movie.backdrop_path !== null){
-                    return movie.backdrop_path;
-                }else{
-                    return movie.poster_path;
+        if(movies == 0){
+            listMovieElement.innerHTML = `<h2>Movie not found</h2>`
+        }else {
+            movies.forEach(movie => {
+                const movieImage = () => {
+                    if (movie.backdrop_path !== null) {
+                        return movie.backdrop_path;
+                    } else {
+                        return movie.poster_path;
+                    }
                 }
-            }
-            listMovieElement.innerHTML += `
+                listMovieElement.innerHTML += `
             <div class="col">
                 <div class="card">
                     <img src="${linkImage}${movieImage()}" class="card-img-top" alt="...">
@@ -64,7 +110,9 @@ const main = () => {
                 </div>
             </div>
           `;
-        });
+            });
+
+        }
     };
 
     const showResponseMessage = (message = 'Check your internet connection') => {
@@ -72,7 +120,8 @@ const main = () => {
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-            getNowPlaying();
+        getGenres();
+        getMovie();
     });
 };
 
